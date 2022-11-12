@@ -22,7 +22,7 @@ CAT_FEATURES = [
     "relationship",
     "race",
     "sex",
-    "native-country",
+    "native-country"
 ]
 
 
@@ -69,66 +69,34 @@ def process_data(data: pd.DataFrame,
         onehotencoder = encoder
 
     y = data.pop(label)
-    y = label_binarizer.fit_transform(y.values).ravel()
+    
+    if train:
+        y = label_binarizer.fit_transform(y.values).ravel()
+    else:
+        y = label_binarizer.transform(y.values).ravel()
 
     if categorical_features:
-        X = np.concatenate(
-            [
-                data.drop(columns=categorical_features),
-                onehotencoder.fit_transform(data[categorical_features].values)
-            ],
-            axis=1
-        )
+        if train:
+            X = np.concatenate(
+                [
+                    data.drop(columns=categorical_features),
+                    onehotencoder.fit_transform(data[categorical_features].values)
+                ],
+                axis=1
+            )
+        else:
+            X = np.concatenate(
+                [
+                    data.drop(columns=categorical_features),
+                    onehotencoder.transform(data[categorical_features].values)
+                ],
+                axis=1
+            )
 
     else:
         X = data
 
     return X, y, onehotencoder, label_binarizer
-
-
-def save_processed_data(
-        X_train: np.ndarray,
-        X_test: np.ndarray,
-        y_train: np.ndarray,
-        y_test: np.ndarray) -> None:
-    """Saves processed data
-
-    Args:
-        X_train (np.ndarray): X train
-        X_test (np.ndarray): X test
-        y_train (np.ndarray): y train
-        y_test (np.ndarray): y test
-    """
-    pd.DataFrame(X_train).to_csv(
-        "data/X_train.csv",
-        index=False,
-        encoding="utf-8")
-    pd.DataFrame(X_test).to_csv(
-        "data/X_test.csv",
-        index=False,
-        encoding="utf-8")
-    pd.Series(y_train).to_csv(
-        "data/y_train.csv",
-        index=False,
-        encoding="utf-8")
-    pd.Series(y_test).to_csv(
-        "data/y_test.csv",
-        index=False,
-        encoding="utf-8")
-
-
-def load_processed_data() -> Tuple[np.ndarray,
-                                   np.ndarray, np.ndarray, np.ndarray]:
-    """Loads pre-processed data
-
-    Returns:
-        Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: X_train, X_test, y_train, y_test
-    """
-    X_train = pd.read_csv("data/X_train.csv").values
-    X_test = pd.read_csv("data/X_test.csv").values
-    y_train = pd.read_csv("data/y_train.csv").values
-    y_test = pd.read_csv("data/y_test.csv").values
-    return X_train, X_test, y_train, y_test
 
 
 def train_model(X: np.ndarray, y: np.ndarray) -> AdaBoostClassifier:
@@ -162,8 +130,9 @@ def save_model_artifacts(
     joblib.dump(lb, 'model/lb.pkl')
 
 
-def load_model_artifacts(
-) -> Tuple[AdaBoostClassifier, OneHotEncoder, LabelBinarizer]:
+def load_model_artifacts() -> Tuple[AdaBoostClassifier,
+                                    OneHotEncoder,
+                                    LabelBinarizer]:
     """Loads the saved artifacts
 
     Returns:
@@ -196,16 +165,18 @@ if __name__ == "__main__":
 
     logging.info("Loading data")
     data = load_data()
-
+    train, test = train_test_split(data, test_size=0.2)
+    
     logging.info("Processing data")
-    X, y, encoder, lb = process_data(
-        data, label="salary", categorical_features=CAT_FEATURES
+    X_train, y_train, encoder, lb = process_data(
+        train, label="salary", train=True,
+        categorical_features=CAT_FEATURES
     )
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-    logging.info("Saving data artifacts")
-    save_processed_data(X_train, X_test, y_train, y_test)
-
+    X_test, y_test, _, _ = process_data(
+        test, label="salary", train=False,
+        categorical_features=CAT_FEATURES, encoder=encoder, lb=lb
+    )
+    
     logging.info("Training model")
     model = train_model(X_train, y_train)
 
