@@ -16,8 +16,11 @@ def test_data() -> None:
     """
     Tests whether the raw data contains the expected columns.
     """
-    data = pd.read_csv("data/census.csv", skipinitialspace=True, low_memory=False)
-    
+    data = pd.read_csv(
+        "data/census.csv",
+        skipinitialspace=True,
+        low_memory=False)
+
     assert set(data.columns) == {
         "age",
         "workclass",
