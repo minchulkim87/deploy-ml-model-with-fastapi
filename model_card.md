@@ -30,3 +30,5 @@ The data contains personal attributes such as sex and race.
 We should exercise caution to not introduce bias into model performance for the different groups.
 
 ## Caveats and Recommendations
+
+As mentioned in the Ethical Considerations around the issues that could arise from model performance for the different groups, the performance on many slices of the data are quite poor with f1-scores well below 0.5. See `model/slice_output.txt` for details. One place to start is to gather more data and use different hyperparameters to improve model performance across all slices.
