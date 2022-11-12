@@ -1,3 +1,7 @@
+"""
+Script to perform unittests
+"""
+
 import pandas as pd
 from sklearn.metrics import fbeta_score
 
@@ -8,7 +12,10 @@ from train_model import (
 )
 
 
-def test_data():
+def test_data() -> None:
+    """
+    Tests whether the raw data contains the expected columns.
+    """
     data = pd.read_csv("data/census.csv", skipinitialspace=True, low_memory=False)
     
     assert set(data.columns) == {
@@ -30,14 +37,20 @@ def test_data():
     }
 
 
-def test_load_data():
+def test_load_data() -> None:
+    """
+    Tests whether the pre-processed data has expected shapes.
+    """
     X_train, X_test, y_train, y_test = load_processed_data()
     assert len(X_train) == len(y_train)
     assert len(X_test) == len(y_test)
     assert 0.1 * len(X_train) < len(X_test) < len(X_train)
 
 
-def test_model():
+def test_model() -> None:
+    """
+    Tests whether the model f1 score on test data is acceptable.
+    """
     _, X_test, _, y_test = load_processed_data()
     model, _, _ = load_model_artifacts()
     y_pred = model.predict(X_test)
