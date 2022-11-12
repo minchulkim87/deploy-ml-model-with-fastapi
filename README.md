@@ -28,3 +28,11 @@ pytest
 ```
 
 The above two are automatically run on "push" to GitHub.
+
+## Deploying the API locally using `FastAPI`
+
+Spint up a local API using the shell command:
+
+```
+python -m main
+```
