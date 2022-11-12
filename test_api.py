@@ -12,6 +12,9 @@ def test_get_root():
     """ Test the root page get a succesful response"""
     r = client.get("/")
     assert r.status_code == 200
+    assert r.json() == {
+        "message": "This app predicts whether salary is greater than $50,000 / year."
+    }
 
 
 def test_post_predict_up():
