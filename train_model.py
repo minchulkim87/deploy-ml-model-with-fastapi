@@ -67,10 +67,10 @@ def save_processed_data(X_train, X_test, y_train, y_test):
 
 
 def load_processed_data():
-    X_train = pd.read_csv("data/X_train.csv", header=None).values
-    X_test = pd.read_csv("data/X_test.csv", header=None).values
-    y_train = pd.read_csv("data/y_train.csv", header=None).values
-    y_test = pd.read_csv("data/y_test.csv", header=None).values
+    X_train = pd.read_csv("data/X_train.csv").values
+    X_test = pd.read_csv("data/X_test.csv").values
+    y_train = pd.read_csv("data/y_train.csv").values
+    y_test = pd.read_csv("data/y_test.csv").values
     return X_train, X_test, y_train, y_test
 
 
