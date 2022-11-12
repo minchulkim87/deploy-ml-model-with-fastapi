@@ -1,4 +1,4 @@
-"""_summary_
+"""Check performance on each categorical features and saves it to an output file.
 """
 
 import logging
@@ -25,6 +25,20 @@ def slice_performance(data: pd.DataFrame,
                       model: AdaBoostClassifier,
                       encoder: OneHotEncoder,
                       lb: LabelBinarizer) -> float:
+    """Given a feature and category, the model score is computed on the data.
+
+    Args:
+        data (pd.DataFrame): test data
+        feature (str): column to slice
+        category (str): category value within feature column to slice
+        model (AdaBoostClassifier): given model to test
+        encoder (OneHotEncoder): category encoder
+        lb (LabelBinarizer): response label binarizer
+
+    Returns:
+        float: model score
+    """
+    
     temp_df = data[data[feature] == category]
 
     X_test, y_test, _, _ = process_data(
@@ -36,13 +50,13 @@ def slice_performance(data: pd.DataFrame,
     return compute_model_metrics(y_test, y_pred)
 
 
-def test_slice_performance():
-    """ Check performance on categorical features """
+def test_slice_performance() -> None:
+    """Check performance on each categorical features and saves it to an output file."""
 
     data = load_data()
     _, test = train_test_split(data, test_size=0.20)
     model, encoder, lb = load_model_artifacts()
-    
+
     slice_metrics = []
     for feature in CAT_FEATURES:
         for cat in test[feature].unique():

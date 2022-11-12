@@ -69,7 +69,7 @@ def process_data(data: pd.DataFrame,
         onehotencoder = encoder
 
     y = data.pop(label)
-    
+
     if train:
         y = label_binarizer.fit_transform(y.values).ravel()
     else:
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     logging.info("Loading data")
     data = load_data()
     train, test = train_test_split(data, test_size=0.2)
-    
+
     logging.info("Processing data")
     X_train, y_train, encoder, lb = process_data(
         train, label="salary", train=True,
@@ -176,7 +176,7 @@ if __name__ == "__main__":
         test, label="salary", train=False,
         categorical_features=CAT_FEATURES, encoder=encoder, lb=lb
     )
-    
+
     logging.info("Training model")
     model = train_model(X_train, y_train)
 
