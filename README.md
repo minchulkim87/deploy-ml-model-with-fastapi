@@ -9,6 +9,7 @@ The key objectives of this project is to apply best practices when it comes to d
 3. Quality control using `pytest`.
 4. CI/CD using `GitHub`.
 5. Model API deployment using `FastAPI`.
+6. Documentation in the style of Model Cards.
 
 ## Dependency management using `conda`
 
@@ -28,6 +29,14 @@ To create the conda environment. To use the environment, use the shell command:
 conda activate mldeployudacity
 ```
 
-## Code version control using `git`.
+## Code version control using `git`
 
 I used `git` manage code version control. `git` can be downloaded and installed from [here](git-scm.com).
+
+## Quality control using `pytest`
+
+I used `pytest` to perform unittests. Run the tests by using the shell command:
+
+```sh
+pytest
+```

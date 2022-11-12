@@ -29,10 +29,17 @@ def load_data():
 
 def process_data(data: pd.DataFrame,
                  label: str,
-                 categorical_features: Optional[List[str]]=None):
+                 train: bool=True,
+                 categorical_features: Optional[List[str]]=None,
+                 encoder: Optional[OneHotEncoder]=None,
+                 lb: Optional[LabelBinarizer]=None):
     
-    binarizer = LabelBinarizer()
-    onehotencoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
+    if train:
+        binarizer = LabelBinarizer()
+        onehotencoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
+    else:
+        binarizer = lb
+        onehotencoder = encoder
     
     y = data.pop(label)
     y = binarizer.fit_transform(y.values).ravel()
@@ -50,6 +57,21 @@ def process_data(data: pd.DataFrame,
         X= data
     
     return X, y, onehotencoder, binarizer
+
+
+def save_processed_data(X_train, X_test, y_train, y_test):
+    pd.DataFrame(X_train).to_csv("data/X_train.csv", index=False, encoding="utf-8")
+    pd.DataFrame(X_test).to_csv("data/X_test.csv", index=False, encoding="utf-8")
+    pd.Series(y_train).to_csv("data/y_train.csv", index=False, encoding="utf-8")
+    pd.Series(y_test).to_csv("data/y_test.csv", index=False, encoding="utf-8")
+
+
+def load_processed_data():
+    X_train = pd.read_csv("data/X_train.csv", header=None).values
+    X_test = pd.read_csv("data/X_test.csv", header=None).values
+    y_train = pd.read_csv("data/y_train.csv", header=None).values
+    y_test = pd.read_csv("data/y_test.csv", header=None).values
+    return X_train, X_test, y_train, y_test
 
 
 def train_model(X, y):
@@ -87,6 +109,9 @@ if __name__ == "__main__":
         data, label="salary", categorical_features=CAT_FEATURES
     )
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    
+    logging.info("Saving data artifacts")
+    save_processed_data(X_train, X_test, y_train, y_test)
 
     logging.info("Training model")
     model = train_model(X_train, y_train)
