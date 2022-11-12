@@ -1,10 +1,10 @@
 """ This module tests the root and the prediction end points """
+
 from fastapi.testclient import TestClient
 
-# Import our app from main.py.
 from main import app
 
-# Instantiate the testing client with our app.
+
 client = TestClient(app)
 
 
