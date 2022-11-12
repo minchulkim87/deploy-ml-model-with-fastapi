@@ -6,10 +6,9 @@ The key objectives of this project is to apply best practices when it comes to d
 
 1. Dependency management using `conda`.
 2. Code version control using `git`.
-3. Data version control using `dvc`.
-4. Quality control using `pytest`.
-5. CI/CD using `GitHub`.
-6. Model API deployment using `FastAPI`.
+3. Quality control using `pytest`.
+4. CI/CD using `GitHub`.
+5. Model API deployment using `FastAPI`.
 
 ## Dependency management using `conda`
 
