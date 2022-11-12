@@ -1,0 +1,9 @@
+requests
+numpy
+pandas
+scikit-learn
+flake8
+pytest
+fastapi==0.65.2
+uvicorn
+gunicorn
