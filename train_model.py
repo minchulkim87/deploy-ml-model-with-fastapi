@@ -39,7 +39,7 @@ def load_data() -> pd.DataFrame:
 
 
 def process_data(data: pd.DataFrame,
-                 label: str,
+                 label: Optional[str] = None,
                  train: bool = True,
                  categorical_features: Optional[List[str]] = None,
                  encoder: Optional[OneHotEncoder] = None,
@@ -67,14 +67,17 @@ def process_data(data: pd.DataFrame,
     else:
         label_binarizer = lb
         onehotencoder = encoder
+    
+    if isinstance(label, str):
+        y = data.pop(label)
 
-    y = data.pop(label)
-
-    if train:
-        y = label_binarizer.fit_transform(y.values).ravel()
+        if train:
+            y = label_binarizer.fit_transform(y.values).ravel()
+        else:
+            y = label_binarizer.transform(y.values).ravel()
     else:
-        y = label_binarizer.transform(y.values).ravel()
-
+        y = None
+    
     if categorical_features:
         if train:
             X = np.concatenate(
