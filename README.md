@@ -36,3 +36,13 @@ Spint up a local API using the shell command:
 ```
 python -m main
 ```
+
+### App deployed on Heroku
+
+This app is deployed on Heroku at https://udacitymldevops.herokuapp.com/.
+
+The endpoint can be tested by the command:
+
+```sh
+python -m heroku_api_request
+```
